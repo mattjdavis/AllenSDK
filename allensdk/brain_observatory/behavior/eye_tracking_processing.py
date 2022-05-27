@@ -199,16 +199,16 @@ def process_eye_tracking_data(eye_data: pd.DataFrame,
     n_sync = len(frame_times)
     n_eye_frames = len(eye_data.index)
 
-     # Here we implement a hack to deal with metadata frames in behavior
-    # videos on experiments with MVR implemented. This is a temp fix, and 
-    # not fully vetted for all possible cases. Future work may include
-    # accomadate "lost_frames" in eye_data json
+    # Hack to deal with metadata frames in behavior
+    # videos on experiments with MVR. This is a temp fix, and 
+    # not fully vetted for all possible cases. Future work may use 
+    # "lost_frames" in eye_data json
     # see: https://github.com/AllenInstitute/mindscope_qc/issues/48
     # see: https://github.com/AllenInstitute/mindscope_qc/issues/40
     # 1. checks for eye json (to confirm this is MVR session)
     # 2. removes 1st row from EyeTrackingFile (metadata frame)
-    # 3. Does naive truncations to arrays match (this obviates the truncation,
-    # below)
+    # 3. Naively truncates to match arrays (this obviates the truncation
+    # below, which can be possibly removed when this code is cleaned by tech)
     if mvr_experiment:
         eye_data = eye_data[1:].reset_index(drop=True)
 
@@ -227,8 +227,6 @@ def process_eye_tracking_data(eye_data: pd.DataFrame,
             eye_data = eye_data[:min_frames].reset_index(drop=True)
 
             n_sync, n_eye_frames = len(frame_times), len(eye_data.index)
-
-        
 
     # If n_sync exceeds n_eye_frames by <= 15,
     # just trim the excess sync pulses from the end
