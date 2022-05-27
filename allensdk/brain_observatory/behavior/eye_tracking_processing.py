@@ -212,17 +212,23 @@ def process_eye_tracking_data(eye_data: pd.DataFrame,
     if mvr_experiment:
         eye_data = eye_data[1:].reset_index(drop=True)
 
-        # find the shortest array length of frame_times/EyeTrackingFile and
-        #  truncate to the that value
-        min_frames = min(n_sync,n_eye_frames)
-        frame_times = frame_times[:min_frames]
-        eye_data = eye_data[:min_frames].reset_index(drop=True)
-
-        n_sync = len(frame_times)
-        n_eye_frames = len(eye_data.index)
-
         logging.warning("mvr experiment found, removed 1st frame from"
-                        "eye_data,truncate sync_frames/eye_data to match")
+                        " eye_data")
+        n_sync, n_eye_frames = len(frame_times), len(eye_data.index)
+
+        if n_sync != n_eye_frames:
+            logging.warning(f"sync_frames ({n_sync}) & eye_data"
+                            f"({n_eye_frames}) size mismatch, truncating to"
+                            f" shortest of those arrays")
+            # find the shortest array length of frame_times/EyeTrackingFile and
+            #  truncate to the that value
+            min_frames = min(n_sync,n_eye_frames)
+            frame_times = frame_times[:min_frames]
+            eye_data = eye_data[:min_frames].reset_index(drop=True)
+
+            n_sync, n_eye_frames = len(frame_times), len(eye_data.index)
+
+        
 
     # If n_sync exceeds n_eye_frames by <= 15,
     # just trim the excess sync pulses from the end
