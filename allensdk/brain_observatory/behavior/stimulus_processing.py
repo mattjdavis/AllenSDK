@@ -167,7 +167,8 @@ def get_gratings_metadata(stimuli: Dict, start_idx: int = 0) -> pd.DataFrame:
 
 def get_stimulus_templates(
         pkl: dict, grating_images_dict: Optional[dict] = None,
-        limit_to_images: Optional[List] = None) -> Optional[StimulusTemplate]:
+        limit_to_images: Optional[List] = None,
+        skip_unwarping: Optional[bool] = False) -> Optional[StimulusTemplate]:
     """
     Gets images presented during experiments from the behavior stimulus file
     (*.pkl)
@@ -187,6 +188,9 @@ def get_stimulus_templates(
         of aforementioned warped or unwarped grating stimuli.
     limit_to_images: Optional[list]
         Only return images given by these image names
+    skip_unwarping: Optional[bool]
+        Unwarping the stimulus is a slow operation, set this to True
+        to have BehaviorSession load faster.
 
     Returns
     -------
@@ -216,7 +220,8 @@ def get_stimulus_templates(
         return StimulusTemplateFactory.from_unprocessed(
             image_set_name=image_set_name,
             image_attributes=attrs,
-            images=image_values
+            images=image_values,
+            skip_unwarping=skip_unwarping
         )
     elif 'grating' in pkl_stimuli:
         if (grating_images_dict is None) or (not grating_images_dict):

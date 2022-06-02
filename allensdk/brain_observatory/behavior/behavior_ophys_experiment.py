@@ -114,7 +114,8 @@ class BehaviorOphysExperiment(BehaviorSession):
                   events_filter_scale_seconds: float = 2.0/31.0,
                   events_filter_n_time_steps: int = 20,
                   exclude_invalid_rois=True,
-                  skip_eye_tracking=False) -> \
+                  skip_eye_tracking=False,
+                  skip_unwarping=False) -> \
             "BehaviorOphysExperiment":
         """
         Parameters
@@ -132,6 +133,8 @@ class BehaviorOphysExperiment(BehaviorSession):
             Whether to exclude invalid rois
         skip_eye_tracking
             Used to skip returning eye tracking data
+        skip_unwarping
+            Used to skip unwarping stim
         """
         def _is_multi_plane_session():
             imaging_plane_group_meta = ImagingPlaneGroup.from_lims(
@@ -187,7 +190,8 @@ class BehaviorOphysExperiment(BehaviorSession):
             behavior_session_id=behavior_session_id.value,
             stimulus_timestamps=stimulus_timestamps,
             monitor_delay=monitor_delay,
-            date_of_acquisition=date_of_acquisition
+            date_of_acquisition=date_of_acquisition,
+            skip_unwarping=skip_unwarping
         )
         if is_multiplane_session:
             ophys_timestamps = OphysTimestampsMultiplane.from_sync_file(

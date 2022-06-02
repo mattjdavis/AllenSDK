@@ -36,10 +36,16 @@ class StimulusImageFactory:
     _monitor = BrainObservatoryMonitor()
 
     def from_unprocessed(self, input_array: np.ndarray,
-                         name: str) -> StimulusImage:
+                         name: str,
+                         skip_unwarping:bool) -> StimulusImage:
         """Creates a StimulusImage from unprocessed input (usually pkl).
         Image needs to be warped and preprocessed"""
-        resized, unwarped = self._get_unwarped(arr=input_array)
+        if skip_unwarping:
+            unwarped = None
+            resized = self._monitor.natural_scene_image_to_screen(
+            input_array, origin='upper')
+        else:
+            resized, unwarped = self._get_unwarped(arr=input_array)
         warped = self._get_warped(arr=resized)
         image = StimulusImage(name=name, warped=warped, unwarped=unwarped)
         return image
@@ -202,7 +208,8 @@ class StimulusTemplateFactory:
 
     @staticmethod
     def from_unprocessed(image_set_name: str, image_attributes: List[dict],
-                         images: List[np.ndarray]) -> StimulusTemplate:
+                         images: List[np.ndarray],
+                         skip_unwarping: bool) -> StimulusTemplate:
         """Create StimulusTemplate from pkl or unprocessed input. Stimulus
         templates created this way need to be processed to acquire unwarped
         versions of the images presented.
@@ -227,6 +234,7 @@ class StimulusTemplateFactory:
                 spatial_frequency, image_index
         images : List[np.ndarray]
             A list of image arrays
+        skip_unwarping: bool
 
         Returns
         -------
@@ -237,7 +245,7 @@ class StimulusTemplateFactory:
         for i, image in enumerate(images):
             name = image_attributes[i]['image_name']
             stimulus_image = StimulusImageFactory().from_unprocessed(
-                name=name, input_array=image)
+                name=name, input_array=image,skip_unwarping=skip_unwarping)
             stimulus_images.append(stimulus_image)
         return StimulusTemplate(image_set_name=image_set_name,
                                 images=stimulus_images)

@@ -45,13 +45,15 @@ class Stimuli(DataObject, StimulusFileReadableInterface,
     def from_stimulus_file(
             cls, stimulus_file: StimulusFile,
             stimulus_timestamps: StimulusTimestamps,
-            limit_to_images: Optional[List] = None) -> "Stimuli":
+            limit_to_images: Optional[List] = None,
+            skip_unwarping: Optional[bool] = False) -> "Stimuli":
         p = Presentations.from_stimulus_file(
             stimulus_file=stimulus_file,
             stimulus_timestamps=stimulus_timestamps,
             limit_to_images=limit_to_images)
         t = Templates.from_stimulus_file(stimulus_file=stimulus_file,
-                                         limit_to_images=limit_to_images)
+                                         limit_to_images=limit_to_images,
+                                         skip_unwarping=skip_unwarping)
         return Stimuli(presentations=p, templates=t)
 
     def to_nwb(self, nwbfile: NWBFile) -> NWBFile:

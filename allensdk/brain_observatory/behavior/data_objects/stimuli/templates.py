@@ -36,7 +36,8 @@ class Templates(DataObject, StimulusFileReadableInterface,
     @classmethod
     def from_stimulus_file(
             cls, stimulus_file: StimulusFile,
-            limit_to_images: Optional[List] = None) -> "Templates":
+            limit_to_images: Optional[List] = None,
+            skip_unwarping: Optional[bool] = False) -> "Templates":
         """Get stimulus templates (movies, scenes) for behavior session."""
 
         # TODO: Eventually the `grating_images_dict` should be provided by the
@@ -84,7 +85,8 @@ class Templates(DataObject, StimulusFileReadableInterface,
         pkl = stimulus_file.data
         t = get_stimulus_templates(pkl=pkl,
                                    grating_images_dict=grating_images_dict,
-                                   limit_to_images=limit_to_images)
+                                   limit_to_images=limit_to_images,
+                                   skip_unwarping=skip_unwarping)
         return Templates(templates=t)
 
     @classmethod

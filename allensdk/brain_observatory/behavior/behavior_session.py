@@ -142,7 +142,8 @@ class BehaviorSession(DataObject, LimsReadableInterface,
                   lims_db: Optional[PostgresQueryMixin] = None,
                   stimulus_timestamps: Optional[StimulusTimestamps] = None,
                   monitor_delay: Optional[float] = None,
-                  date_of_acquisition: Optional[DateOfAcquisition] = None) \
+                  date_of_acquisition: Optional[DateOfAcquisition] = None,
+                  skip_unwarping: Optional[bool] = False) \
             -> "BehaviorSession":
         """
 
@@ -163,6 +164,9 @@ class BehaviorSession(DataObject, LimsReadableInterface,
         date_of_acquisition
             Date of acquisition. If not provided, will read from
             behavior_sessions table.
+        skip_unwarping
+            Unwarping the stimulus is a slow operation, set this to True
+            to have Behavior session load faster.
         Returns
         -------
         `BehaviorSession` instance
@@ -203,6 +207,7 @@ class BehaviorSession(DataObject, LimsReadableInterface,
             cls._read_data_from_stimulus_file(
                 stimulus_file=stimulus_file,
                 stimulus_timestamps=stimulus_timestamps,
+                skip_unwarping = skip_unwarping,
             )
         if date_of_acquisition is None:
             date_of_acquisition = DateOfAcquisition.from_lims(
@@ -881,7 +886,8 @@ class BehaviorSession(DataObject, LimsReadableInterface,
     @classmethod
     def _read_data_from_stimulus_file(
             cls, stimulus_file: StimulusFile,
-            stimulus_timestamps: StimulusTimestamps):
+            stimulus_timestamps: StimulusTimestamps,
+            skip_unwarping: bool):
         """Helper method to read data from stimulus file"""
         licks = Licks.from_stimulus_file(
             stimulus_file=stimulus_file,
@@ -891,7 +897,8 @@ class BehaviorSession(DataObject, LimsReadableInterface,
             stimulus_timestamps=stimulus_timestamps)
         stimuli = Stimuli.from_stimulus_file(
             stimulus_file=stimulus_file,
-            stimulus_timestamps=stimulus_timestamps)
+            stimulus_timestamps=stimulus_timestamps,
+            skip_unwarping=skip_unwarping)
         task_parameters = TaskParameters.from_stimulus_file(
             stimulus_file=stimulus_file)
         trials = TrialTable.from_stimulus_file(
