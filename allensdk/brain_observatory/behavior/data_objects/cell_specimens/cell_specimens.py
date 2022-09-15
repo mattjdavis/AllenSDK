@@ -121,7 +121,7 @@ class CellSpecimens(DataObject, LimsReadableInterface,
                  meta: CellSpecimenMeta,
                  dff_traces: DFFTraces,
                  corrected_fluorescence_traces: CorrectedFluorescenceTraces,
-                 events: Events,
+                 #events: Events,
                  ophys_timestamps: OphysTimestamps,
                  segmentation_mask_image_spacing: Tuple,
                  exclude_invalid_rois=True):
@@ -181,15 +181,15 @@ class CellSpecimens(DataObject, LimsReadableInterface,
         # there seem to be cases where cell_specimen_table contains rois not in
         # events
         # See ie https://app.zenhub.com/workspaces/allensdk-10-5c17f74db59cfb36f158db8c/issues/alleninstitute/allensdk/2139     # noqa
-        events.filter_and_reorder(
-            roi_ids=cell_specimen_table['cell_roi_id'].values,
-            raise_if_rois_missing=False)
+        #events.filter_and_reorder(
+        #    roi_ids=cell_specimen_table['cell_roi_id'].values,
+        #    raise_if_rois_missing=False)
 
         self._meta = meta
         self._cell_specimen_table = cell_specimen_table
         self._dff_traces = dff_traces
         self._corrected_fluorescence_traces = corrected_fluorescence_traces
-        self._events = events
+        #self._events = events
         self._segmentation_mask_image = self._get_segmentation_mask_image(
             spacing=segmentation_mask_image_spacing)
 
@@ -301,13 +301,13 @@ class CellSpecimens(DataObject, LimsReadableInterface,
 
         dff_traces = _get_dff_traces()
         corrected_fluorescence_traces = _get_corrected_fluorescence_traces()
-        events = _get_events()
+        #events = _get_events()
 
         return CellSpecimens(
             cell_specimen_table=cell_specimen_table, meta=meta,
             dff_traces=dff_traces,
             corrected_fluorescence_traces=corrected_fluorescence_traces,
-            events=events,
+            #events=events,
             ophys_timestamps=ophys_timestamps,
             segmentation_mask_image_spacing=segmentation_mask_image_spacing,
             exclude_invalid_rois=exclude_invalid_rois
