@@ -121,7 +121,7 @@ class CellSpecimens(DataObject, LimsReadableInterface,
                  meta: CellSpecimenMeta,
                  dff_traces: DFFTraces,
                  corrected_fluorescence_traces: CorrectedFluorescenceTraces,
-                 #events: Events,
+                 events: Events,
                  ophys_timestamps: OphysTimestamps,
                  segmentation_mask_image_spacing: Tuple,
                  exclude_invalid_rois=True):
@@ -189,7 +189,7 @@ class CellSpecimens(DataObject, LimsReadableInterface,
         self._cell_specimen_table = cell_specimen_table
         self._dff_traces = dff_traces
         self._corrected_fluorescence_traces = corrected_fluorescence_traces
-        #self._events = events
+        self._events = events
         self._segmentation_mask_image = self._get_segmentation_mask_image(
             spacing=segmentation_mask_image_spacing)
 
@@ -301,13 +301,13 @@ class CellSpecimens(DataObject, LimsReadableInterface,
 
         dff_traces = _get_dff_traces()
         corrected_fluorescence_traces = _get_corrected_fluorescence_traces()
-        #events = _get_events()
+        events = _get_events()
 
         return CellSpecimens(
             cell_specimen_table=cell_specimen_table, meta=meta,
             dff_traces=dff_traces,
             corrected_fluorescence_traces=corrected_fluorescence_traces,
-            #events=events,
+            events=events,
             ophys_timestamps=ophys_timestamps,
             segmentation_mask_image_spacing=segmentation_mask_image_spacing,
             exclude_invalid_rois=exclude_invalid_rois
