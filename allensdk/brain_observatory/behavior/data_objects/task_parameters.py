@@ -177,7 +177,9 @@ class TaskParameters(DataObject, StimulusFileReadableInterface,
 
         behavior = data["items"]["behavior"]
         stimuli = behavior['stimuli']
-
+        # grating fix hack
+        if "gratings" in stimuli.keys():
+            stimuli["grating"] = stimuli.pop('gratings') 
         def _parse_stimulus_key():
             if 'images' in stimuli:
                 stim_key = 'images'
@@ -219,7 +221,8 @@ class TaskParameters(DataObject, StimulusFileReadableInterface,
         config = data["items"]["behavior"]["config"]
 
         task_id = config['behavior']['task_id']
-        if 'DoC' in task_id:
+        #if 'DoC' or in task_id
+        if 'DoC' or 'dummy_task' in task_id: # hack forgot task_id
             task = TaskType.CHANGE_DETECTION
         else:
             msg = "metadata.get_task_parameters does not "

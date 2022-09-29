@@ -92,7 +92,7 @@ class _StimulusFile(DataFile):
         """
         return len(self.data['intervalsms']) + 1
 
-
+import mjd_dev.notebook_utils as nu
 class BehaviorStimulusFile(_StimulusFile):
 
     @classmethod
@@ -136,6 +136,10 @@ class BehaviorStimulusFile(_StimulusFile):
             raise RuntimeError(full_msg)
 
         return None
+
+    def catch_hack(self):
+        self._data = nu.catch_trials_pkl_hack(self.data)
+        print("WARNING: pkl file catch hack")
 
     @property
     def num_frames(self) -> int:

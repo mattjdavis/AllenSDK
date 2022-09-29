@@ -362,12 +362,12 @@ class BehaviorSession(DataObject, LimsReadableInterface,
         behavior_session_id = BehaviorSessionId(behavior_session_id)
 
         stimulus_file_lookup = StimulusFileLookup()
-
+        
         stimulus_file_lookup.behavior_stimulus_file = (
                 BehaviorStimulusFile.from_lims(
                     db=lims_db,
                     behavior_session_id=behavior_session_id.value))
-
+        stimulus_file_lookup.behavior_stimulus_file.catch_hack() # MJD HACK
         running_acquisition = RunningAcquisition.from_stimulus_file(
             behavior_stimulus_file=stimulus_file_lookup.behavior_stimulus_file,
             sync_file=sync_file)
@@ -397,13 +397,15 @@ class BehaviorSession(DataObject, LimsReadableInterface,
                 sync_file=sync_file,
                 monitor_delay=monitor_delay
             )
-
-        if date_of_acquisition is None:
-            date_of_acquisition = DateOfAcquisition.from_lims(
-                behavior_session_id=behavior_session_id.value, lims_db=lims_db)
-        date_of_acquisition = date_of_acquisition.validate(
-            stimulus_file=stimulus_file_lookup.behavior_stimulus_file,
-            behavior_session_id=behavior_session_id.value)
+        # static hack
+        # if date_of_acquisition is None:
+        #     date_of_acquisition = DateOfAcquisition.from_lims(
+        #         behavior_session_id=behavior_session_id.value, lims_db=lims_db)
+        # date_of_acquisition = date_of_acquisition.validate(
+        #     stimulus_file=stimulus_file_lookup.behavior_stimulus_file,
+        #     behavior_session_id=behavior_session_id.value)
+        date_of_acquisition = None
+        
         if skip_eye_tracking:
             eye_tracking_table = None
             eye_tracking_rig_geometry = None

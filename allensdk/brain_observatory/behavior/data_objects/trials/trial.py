@@ -449,7 +449,7 @@ class Trial:
             changed to.
 
         """
-        grating_oris = {'horizontal', 'vertical'}
+        grating_oris = {'horizontal', 'vertical','group_1','group_0'}
         trial_start_frame = self._trial["events"][0][3]
         initial_image_category_name, _, initial_image_name = \
             self._resolve_initial_image(
@@ -460,12 +460,15 @@ class Trial:
             ((from_set, from_name),
              (to_set, to_name),
              _, _) = self._trial["stimulus_changes"][0]
-
+            print(self._trial["stimulus_changes"][0])
+            print(initial_image_name)
             # do this to fix names if the stimuli is a grating
+            print(from_set)
             if from_set in grating_oris:
                 from_name = f'gratings_{from_name}'
             if to_set in grating_oris:
                 to_name = f'gratings_{to_name}'
+            print(from_name)
             assert from_name == initial_image_name
             change_image_name = to_name
 
