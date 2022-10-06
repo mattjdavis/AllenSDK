@@ -116,8 +116,10 @@ class ReporterLine(DataObject, LimsReadableInterface, JsonReadableInterface,
         reporter_substring_indicator_map = {
             'GCaMP6f': 'GCaMP6f',
             'GC6f': 'GCaMP6f',
-            'GCaMP6s': 'GCaMP6s'
+            'GCaMP6s': 'GCaMP6s',
+            'GC7s': "GCaMP7s",
         }
+        warn=False
         if reporter_line is None:
             if warn:
                 warnings.warn(
