@@ -39,14 +39,12 @@ class StimulusImageFactory:
                          name: str) -> StimulusImage:
         """Creates a StimulusImage from unprocessed input (usually pkl).
         Image needs to be warped and preprocessed"""
-        # skip_unwarping = True # MJD HACK
-        # if skip_unwarping:
-        #     unwarped = None
-        #     resized = self._monitor.natural_scene_image_to_screen(
-        #     input_array, origin='upper')
-        # else:
-        #     resized, unwarped = self._get_unwarped(arr=input_array)
-        resized, unwarped = self._get_unwarped(arr=input_array)
+        if True:
+            unwarped = None
+            resized = self._monitor.natural_scene_image_to_screen(
+            input_array, origin='upper')
+        else:
+            resized, unwarped = self._get_unwarped(arr=input_array)
         warped = self._get_warped(arr=resized)
         image = StimulusImage(name=name, warped=warped, unwarped=unwarped)
         return image
