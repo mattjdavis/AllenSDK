@@ -189,12 +189,15 @@ def _clip_speed_wraps(speed, time, wrap_indices, t_span: float = 0.25):
     such that it does not exceed the min/max values in the neighborhood.
     """
     corrected_speed = speed.copy()
-    for wrap in wrap_indices:
-        start_ix, end_ix = _local_boundaries(time, wrap, t_span)
-        local_slice = np.concatenate(       # Remove the wrap point
-            (speed[start_ix:wrap], speed[wrap+1:end_ix+1]))
-        corrected_speed[wrap] = np.clip(
-            speed[wrap], np.nanmin(local_slice), np.nanmax(local_slice))
+    # MJD HACK
+    skip_wrap_correction = False
+    if skip_wrap_correction: 
+        for wrap in wrap_indices:
+            start_ix, end_ix = _local_boundaries(time, wrap, t_span)
+            local_slice = np.concatenate(       # Remove the wrap point
+                (speed[start_ix:wrap], speed[wrap+1:end_ix+1]))
+            corrected_speed[wrap] = np.clip(
+                speed[wrap], np.nanmin(local_slice), np.nanmax(local_slice))
     return corrected_speed
 
 

@@ -33,3 +33,4 @@ debug.log
 example_ecephys_project_cache/
 .DS_Store
 /venv/
+=3.0
