@@ -301,7 +301,13 @@ class CellSpecimens(DataObject, LimsReadableInterface,
 
         dff_traces = _get_dff_traces()
         corrected_fluorescence_traces = _get_corrected_fluorescence_traces()
-        events = _get_events()
+
+        skip_events = True  #MJD HACK
+        if skip_events:  # MJD HACK
+            events = pd.DataFrame(columns=['cell_roi_id', 'value'])
+            print('EVENTS SKIPPED')  # MJD HACK
+        else:  # MJD HACK
+            events = _get_events()
 
         return CellSpecimens(
             cell_specimen_table=cell_specimen_table, meta=meta,
