@@ -12,6 +12,7 @@ from allensdk.internal.core import DataFile
 from allensdk.brain_observatory.behavior.sync import get_sync_data
 from allensdk.core import DataObject
 
+from data_objects.behavior.grab_behavior import GrabBehavior
 
 def _get_sync_file_query_template(behavior_session_id: int):
 
@@ -38,6 +39,9 @@ def from_json_cache_key(cls, dict_repr: dict, permissive: bool = False):
 def from_lims_cache_key(cls, db, behavior_session_id: int):
     return hashkey(behavior_session_id)
 
+def from_code_ocean_cache_key(cls, db, behavior_session_id: int):
+    return hashkey(behavior_session_id)
+
 
 class SyncFile(DataFile):
     """A DataFile which contains methods for accessing and loading visual
@@ -62,6 +66,15 @@ class SyncFile(DataFile):
     @property
     def permissive(self) -> bool:  # pragma: no cover
         return self._permissive
+    
+    @classmethod
+    @cached(cache=LRUCache(maxsize=10), key=from_code_ocean_cache_key)
+    def from_co_grabber(
+        cls, grabber=GrabBehavior,
+        permissive: bool = True,
+    ) -> "SyncFile":
+        filepath = grabber["sync_file"]
+        return cls(filepath=filepath, permissive=permissive)
 
     @classmethod
     @cached(cache=LRUCache(maxsize=10), key=from_json_cache_key)

@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 
 import numpy as np
 import pandas as pd
@@ -46,6 +46,8 @@ from allensdk.deprecated import legacy
 from allensdk.internal.api import db_connection_creator
 from pynwb import NWBFile
 
+from data_objects.behavior.grab_behavior import GrabBehavior
+from pathlib import Path
 
 class BehaviorOphysExperiment(BehaviorSession):
     """Represents data from a single Visual Behavior Ophys imaging session.
@@ -100,6 +102,130 @@ class BehaviorOphysExperiment(BehaviorSession):
         return nwbfile
 
     # ==================== class and utility methods ======================
+
+    @classmethod
+    def from_co_grabber(
+        cls,
+        #ophys_experiment_id: int,
+        raw_folder_path: Union[str,Path],
+        eye_tracking_z_threshold: float = 3.0,
+        eye_tracking_dilation_frames: int = 2,
+        events_filter_scale_seconds: float = 2.0 / 31.0,
+        events_filter_n_time_steps: int = 20,
+        exclude_invalid_rois: bool = True,
+    ) -> "BehaviorOphysExperiment":
+        """
+        Parameters
+        ----------
+        ophys_experiment_id : int
+            Id of experiment to load.
+        eye_tracking_z_threshold : float
+            See `BehaviorOphysExperiment.from_nwb`
+        eye_tracking_dilation_frames : int
+            See `BehaviorOphysExperiment.from_nwb`
+        events_filter_scale_seconds : float
+            See `BehaviorOphysExperiment.from_nwb`
+        events_filter_n_time_steps : int
+            See `BehaviorOphysExperiment.from_nwb`
+        exclude_invalid_rois : bool
+            Whether to exclude invalid rois
+
+        Returns
+        -------
+        `BehaviorOphysExperiment` instance
+        """
+
+        # def _is_multi_plane_session():
+        #     imaging_plane_group_meta = ImagingPlaneGroup.from_lims(
+        #         ophys_experiment_id=ophys_experiment_id, lims_db=lims_db
+        #     )
+        #     return cls._is_multi_plane_session(
+        #         imaging_plane_group_meta=imaging_plane_group_meta
+        #     )
+
+        # def _get_motion_correction():
+        #     rigid_motion_transform_file = RigidMotionTransformFile.from_lims(
+        #         ophys_experiment_id=ophys_experiment_id, db=lims_db
+        #     )
+        #     return MotionCorrection.from_data_file(
+        #         rigid_motion_transform_file=rigid_motion_transform_file
+        #     )
+
+        # lims_db = db_connection_creator(
+        #     fallback_credentials=LIMS_DB_CREDENTIAL_MAP
+        # )
+
+        # behavior_session_id = BehaviorSessionId.from_lims(
+        #     db=lims_db,
+        #     ophys_experiment_id=ophys_experiment_id,
+        # )
+
+        # is_multiplane_session = _is_multi_plane_session()
+
+        # meta = BehaviorOphysMetadata.from_lims(
+        #     ophys_experiment_id=ophys_experiment_id,
+        #     lims_db=lims_db,
+        #     is_multiplane=is_multiplane_session,
+        # )
+
+        behavior_grabber = GrabBehavior(raw_folder_path=Path(raw_folder_path))
+
+        sync_file = SyncFile.from_co_grabber(grabber=behavior_grabber)
+
+        # monitor_delay = calculate_monitor_delay(
+        #     sync_file=sync_file, equipment=meta.behavior_metadata.equipment
+        # )
+
+        # date_of_acquisition = DateOfAcquisitionOphys.from_lims(
+        #     ophys_experiment_id=ophys_experiment_id, lims_db=lims_db
+        # )
+        # behavior_session = BehaviorSession.from_lims(
+        #     lims_db=lims_db,
+        #     behavior_session_id=behavior_session_id.value,
+        #     sync_file=sync_file,
+        #     monitor_delay=monitor_delay,
+        #     date_of_acquisition=date_of_acquisition,
+        #     eye_tracking_z_threshold=eye_tracking_z_threshold,
+        #     eye_tracking_dilation_frames=eye_tracking_dilation_frames,
+        # )
+        # if is_multiplane_session:
+        #     ophys_timestamps = OphysTimestampsMultiplane.from_sync_file(
+        #         sync_file=sync_file,
+        #         group_count=meta.ophys_metadata.imaging_plane_group_count,
+        #         plane_group=meta.ophys_metadata.imaging_plane_group,
+        #     )
+        # else:
+        #     ophys_timestamps = OphysTimestamps.from_sync_file(
+        #         sync_file=sync_file
+        #     )
+
+        # projections = Projections.from_lims(
+        #     ophys_experiment_id=ophys_experiment_id, lims_db=lims_db
+        # )
+        # cell_specimens = CellSpecimens.from_lims(
+        #     ophys_experiment_id=ophys_experiment_id,
+        #     lims_db=lims_db,
+        #     ophys_timestamps=ophys_timestamps,
+        #     segmentation_mask_image_spacing=projections.max_projection.spacing,
+        #     events_params=EventsParams(
+        #         filter_scale_seconds=events_filter_scale_seconds,
+        #         filter_n_time_steps=events_filter_n_time_steps,
+        #     ),
+        #     exclude_invalid_rois=exclude_invalid_rois,
+        # )
+        # motion_correction = _get_motion_correction()
+
+        # return BehaviorOphysExperiment(
+        #     behavior_session=behavior_session,
+        #     cell_specimens=cell_specimens,
+        #     ophys_timestamps=ophys_timestamps,
+        #     metadata=meta,
+        #     projections=projections,
+        #     motion_correction=motion_correction,
+        #     date_of_acquisition=date_of_acquisition,
+        # )
+
+        return sync_file
 
     @classmethod
     def from_lims(
