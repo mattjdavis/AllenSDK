@@ -35,7 +35,7 @@ def from_json_cache_key(cls, dict_repr: dict, permissive: bool = False):
     return hashkey(json.dumps(dict_repr))
 
 
-def from_lims_cache_key(cls, db, behavior_session_id: int):
+def from_lims_cache_key(cls, db, behavior_session_id: int, permissive: bool = False):
     return hashkey(behavior_session_id)
 
 

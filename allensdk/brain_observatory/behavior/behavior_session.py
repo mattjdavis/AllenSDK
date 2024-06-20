@@ -311,7 +311,8 @@ class BehaviorSession(DataObject, LimsReadableInterface,
                   date_of_acquisition: Optional[DateOfAcquisition] = None,
                   skip_eye_tracking=False,
                   eye_tracking_z_threshold: float = 3.0,
-                  eye_tracking_dilation_frames: int = 2) \
+                  eye_tracking_dilation_frames: int = 2,
+                  sync_file_permissive: bool = False) \
             -> "BehaviorSession":
         """
 
@@ -355,7 +356,8 @@ class BehaviorSession(DataObject, LimsReadableInterface,
             try:
                 sync_file = SyncFile.from_lims(
                                 db=lims_db,
-                                behavior_session_id=behavior_session_id)
+                                behavior_session_id=behavior_session_id,
+                                permissive=sync_file_permissive)
             except OneResultExpectedError:
                 sync_file = None
 
