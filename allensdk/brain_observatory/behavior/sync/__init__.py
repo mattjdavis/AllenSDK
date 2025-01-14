@@ -243,9 +243,9 @@ def get_sync_data(
         'ophys_frames': get_ophys_frames(sync_dataset, permissive),
         'lick_times': get_lick_times(sync_dataset, permissive),
         'ophys_trigger': get_trigger(sync_dataset, permissive),
-        'eye_tracking': get_eye_tracking(sync_dataset, permissive),
-        'behavior_monitoring': get_behavior_monitoring(sync_dataset,
-                                                       permissive),
+        #'eye_tracking': get_eye_tracking(sync_dataset, permissive),
+        #'behavior_monitoring': get_behavior_monitoring(sync_dataset,
+        #                                                permissive),
         'stim_photodiode': get_stim_photodiode(sync_dataset, permissive),
         'stimulus_times_no_delay': get_raw_stimulus_frames(sync_dataset,
                                                            permissive)
